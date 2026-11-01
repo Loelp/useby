@@ -11,6 +11,8 @@ final class AppContainer {
     let productLookup: any ProductLookupRepository
     let cameraAccess: any CameraAccessProviding
     let calendar: Calendar = .autoupdatingCurrent
+    /// Tab shown at launch. DEBUG builds accept `-initialTab today|insights|cook` for screenshots.
+    private(set) var initialTab: AppTab = .today
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
@@ -46,6 +48,10 @@ final class AppContainer {
         )
     }
 
+    func makeInsightsViewModel() -> InsightsViewModel {
+        InsightsViewModel(calculateSummary: CalculateWasteSummaryUseCase(pantry: pantryRepository, calendar: calendar))
+    }
+
     func makeBarcodeScannerViewModel() -> BarcodeScannerViewModel {
         BarcodeScannerViewModel(cameraAccess: cameraAccess)
     }
@@ -62,6 +68,11 @@ final class AppContainer {
         try container.catalogRepository.seedDefaultsIfNeeded()
         if arguments.contains(SampleDataSeeder.seedArgument) {
             try seeder.seedSampleData()
+        }
+        if let index = arguments.firstIndex(of: "-initialTab"), arguments.indices.contains(index + 1),
+           let url = URL(string: "\(DeepLink.scheme)://\(arguments[index + 1])"),
+           let tab = DeepLink.tab(for: url) {
+            container.initialTab = tab
         }
         #else
         try container.catalogRepository.seedDefaultsIfNeeded()
