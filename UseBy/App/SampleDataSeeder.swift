@@ -38,17 +38,26 @@ struct SampleDataSeeder {
     }
 
     func wipe() throws {
-        try context.delete(model: ConsumptionEventEntity.self)
-        try context.delete(model: PantryItemEntity.self)
-        try context.delete(model: StorageLocationEntity.self)
-        try context.delete(model: CategoryEntity.self)
+        try deleteAll(ConsumptionEventEntity.self)
+        try deleteAll(PantryItemEntity.self)
+        try deleteAll(StorageLocationEntity.self)
+        try deleteAll(CategoryEntity.self)
         try context.save()
+    }
+
+    /// Deletes object by object. `ModelContext.delete(model:)` is a batch delete, which
+    /// Core Data rejects when a relationship has a nullify inverse.
+    private func deleteAll<T: PersistentModel>(_ type: T.Type) throws {
+        for object in try context.fetch(FetchDescriptor<T>()) {
+            context.delete(object)
+        }
     }
 
     /// Replaces items and history with sample data. Expects the default catalog to exist.
     func seedSampleData() throws {
-        try context.delete(model: ConsumptionEventEntity.self)
-        try context.delete(model: PantryItemEntity.self)
+        try deleteAll(ConsumptionEventEntity.self)
+        try deleteAll(PantryItemEntity.self)
+        try context.save()
 
         let locations = try context.fetch(FetchDescriptor<StorageLocationEntity>())
         let categories = try context.fetch(FetchDescriptor<CategoryEntity>())
