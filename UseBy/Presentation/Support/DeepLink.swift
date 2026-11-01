@@ -9,7 +9,7 @@ enum AppTab: Hashable {
 /// Routes `useby://` URLs to a tab.
 enum DeepLink {
     static let scheme = "useby"
-    static let today = URL(string: "useby://today")!
+    static let today = WidgetLink.today
 
     static func tab(for url: URL) -> AppTab? {
         guard url.scheme?.lowercased() == scheme else { return nil }
