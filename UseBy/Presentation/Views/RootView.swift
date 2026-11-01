@@ -4,11 +4,13 @@ struct RootView: View {
     @State private var selectedTab: AppTab
     @State private var todayViewModel: TodayViewModel
     @State private var insightsViewModel: InsightsViewModel
+    @State private var cookViewModel: CookViewModel
 
     init(container: AppContainer) {
         _selectedTab = State(initialValue: container.initialTab)
         _todayViewModel = State(initialValue: container.makeTodayViewModel())
         _insightsViewModel = State(initialValue: container.makeInsightsViewModel())
+        _cookViewModel = State(initialValue: container.makeCookViewModel())
     }
 
     var body: some View {
@@ -18,6 +20,9 @@ struct RootView: View {
             }
             Tab("Insights", systemImage: "chart.bar.xaxis", value: AppTab.insights) {
                 InsightsView(viewModel: insightsViewModel)
+            }
+            Tab("Cook", systemImage: "fork.knife", value: AppTab.cook) {
+                CookView(viewModel: cookViewModel)
             }
         }
         .onOpenURL { url in
