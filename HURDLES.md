@@ -74,3 +74,19 @@ Format: **Problem → Cause → Fix → Files changed.**
 - **Cause:** Both children of the row's `HStack` had equal layout priority.
 - **Fix:** `FreshnessBadge` gets `.layoutPriority(1)`, so the name wraps instead. At accessibility sizes the row switches to a `VStack` through `AnyLayout`, so the badge always has full width.
 - **Files changed:** `UseBy/Presentation/Components/PantryItemRow.swift`.
+
+---
+
+## Phase 6: Tests
+
+### 11. A `Sendable` test stub that records its input
+- **Problem:** `MealSuggestionService` is `Sendable`, so `StubMealService` can't be a plain class with a `var receivedIngredients`. Swift 6 rejects mutable stored properties in a `Sendable` class. An `actor` doesn't fit either, because the protocol's synchronous `availability` getter can't be actor-isolated.
+- **Cause:** Strict concurrency checking applies to test doubles too.
+- **Fix:** Made the stub a `final class` with only `let` properties and recorded calls in a `Mutex<[String]?>` from the Synchronization framework (iOS 18+), so there's no `@unchecked Sendable` escape hatch.
+- **Files changed:** `UseByTests/Mocks.swift`.
+
+### 12. Calendar-day maths in tests
+- **Problem:** "Days remaining" has to count calendar days, not 24-hour blocks. An item due at 1 am tomorrow, checked at 10 am today, is "1 day", not 0.
+- **Cause:** `dateComponents([.day], from:to:)` on raw dates truncates partial days.
+- **Fix:** `PantryItem.daysRemaining(from:calendar:)` compares `startOfDay` on both sides. Tests use a fixed date and a fixed Gregorian calendar in `Australia/Sydney`, so they don't depend on the machine's time zone, and they include a dedicated 1 am boundary test.
+- **Files changed:** `Shared/Domain/Models/PantryItem.swift`, `UseByTests/Fixtures.swift`, `UseByTests/OverviewAndSummaryTests.swift`.
