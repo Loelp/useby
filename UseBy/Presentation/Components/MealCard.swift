@@ -71,7 +71,7 @@ struct ItemChips: View {
                     .font(.subheadline)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 6)
-                    .background(Color.accentColor.opacity(0.15), in: Capsule())
+                    .background(Color.accentColor.opacity(0.15), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
             }
         }
         .accessibilityElement(children: .combine)
