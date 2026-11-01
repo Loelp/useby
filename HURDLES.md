@@ -30,3 +30,31 @@ Format: **Problem → Cause → Fix → Files changed.**
 - **Cause:** Simulator builds are ad-hoc signed. Xcode embeds entitlements as "simulated" entitlements (`*-Simulated.xcent`, linked into the binary) instead of in the code signature.
 - **Fix:** Confirmed `group.com.usebyapp.UseBy` is present in both `UseBy.app-Simulated.xcent` and `UseByWidget.appex-Simulated.xcent`. Device builds need the App Group registered for the signing team (see README).
 - **Files changed:** none.
+
+---
+
+## Phase 3: Data layer
+
+### 5. Open Food Facts returns HTTP 200 for unknown barcodes
+- **Problem:** The brief maps a 404 to `notFound`. A live request for an unknown code (`00000000`) returned `HTTP 200` with `{"status":0,"status_verbose":"no code or invalid code"}`, so checking only for 404 would show "found" with an empty name.
+- **Cause:** The OFF v2 API reports "not found" in the JSON body, not the HTTP status.
+- **Fix:** `productInfo(from:barcode:)` treats `status == 0`, a missing product or a blank `product_name` as `notFound`. 404 is still handled for safety. Brands come back comma-separated (`"Nutella, Ferrero"`), so only the first brand is kept, and `displayName` skips the brand when the name already contains it.
+- **Files changed:** `UseBy/Data/Repositories/OpenFoodFactsProductLookupRepository.swift`, `OpenFoodFactsProductDTO.swift`.
+
+### 6. Notification callbacks and Swift 6 isolation
+- **Problem:** `LocalReminderScheduler` is `@MainActor`, but `UNUserNotificationCenter` calls its completion handlers on a background queue. A closure created in a main-actor context is inferred as main-actor isolated, and Swift 6 inserts a runtime isolation check that crashes when the closure runs off the main thread.
+- **Cause:** Closure isolation inference plus non-`Sendable` `UNNotificationSettings`, which is also why the async `notificationSettings()` variant was avoided.
+- **Fix:** Used the completion-handler APIs wrapped in `withCheckedContinuation`. Marked the closures explicitly `@Sendable` and mapped `UNAuthorizationStatus` to the domain enum inside the closure through a `nonisolated static` helper, so only a `Sendable` value crosses actors.
+- **Files changed:** `UseBy/Data/Services/LocalReminderScheduler.swift`.
+
+### 7. Keeping history when an item is deleted
+- **Problem:** `ConsumptionEvent` history must survive deleting the item it came from.
+- **Cause:** SwiftData's default cascade behaviour depends on the relationship's delete rule, and the rule that matters is on the *item's* side of the inverse.
+- **Fix:** `PantryItemEntity.events` uses `.nullify` with an explicit inverse to `ConsumptionEventEntity.item`, which is optional. Events also snapshot `itemName` and `categoryName`, so Insights never needs the item.
+- **Files changed:** `Shared/Persistence/PantryItemEntity.swift`, `ConsumptionEventEntity.swift`.
+
+### 8. SwiftData would silently use the App Group anyway
+- **Problem:** With the App Group entitlement present, `ModelConfiguration`'s default `groupContainer: .automatic` already picks the group container. On a free personal team, where the group isn't provisioned, behaviour was unclear.
+- **Cause:** Implicit default.
+- **Fix:** `PersistenceController` resolves `containerURL(forSecurityApplicationGroupIdentifier:)` itself and passes an explicit store URL. If that returns `nil`, it logs a warning and uses `groupContainer: .none`, so the app still works and only the widget loses data. Verified on the simulator that `UseBy.store` lives in the App Group container.
+- **Files changed:** `Shared/Persistence/PersistenceController.swift`.
