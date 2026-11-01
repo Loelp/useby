@@ -58,3 +58,19 @@ Format: **Problem → Cause → Fix → Files changed.**
 - **Cause:** Implicit default.
 - **Fix:** `PersistenceController` resolves `containerURL(forSecurityApplicationGroupIdentifier:)` itself and passes an explicit store URL. If that returns `nil`, it logs a warning and uses `groupContainer: .none`, so the app still works and only the widget loses data. Verified on the simulator that `UseBy.store` lives in the App Group container.
 - **Files changed:** `Shared/Persistence/PersistenceController.swift`.
+
+---
+
+## Phase 4: Presentation
+
+### 9. Re-seeding crashed into the startup error screen
+- **Problem:** The second launch with `-seedSampleData` showed "Your Pantry Couldn't Load". The log said: `Constraint trigger violation: Batch delete failed due to mandatory OTO nullify inverse on ConsumptionEventEntity/item`.
+- **Cause:** `ModelContext.delete(model:)` runs a Core Data *batch* delete (`NSBatchDeleteRequest`). Batch deletes skip the object graph, so they can't apply the `.nullify` rule on the item ↔ event relationship and refuse to run. The first seed worked because the store was empty.
+- **Fix:** The seeder now fetches and deletes each object individually (`deleteAll(_:)`), which goes through normal relationship handling. The startup error screen did its job: the app showed a friendly message instead of crashing.
+- **Files changed:** `UseBy/App/SampleDataSeeder.swift`.
+
+### 10. Long freshness badges wrapped in rows
+- **Problem:** "Expired 1 day ago" wrapped onto two lines because the item name took the width first.
+- **Cause:** Both children of the row's `HStack` had equal layout priority.
+- **Fix:** `FreshnessBadge` gets `.layoutPriority(1)`, so the name wraps instead. At accessibility sizes the row switches to a `VStack` through `AnyLayout`, so the badge always has full width.
+- **Files changed:** `UseBy/Presentation/Components/PantryItemRow.swift`.

@@ -1,9 +1,23 @@
 import SwiftUI
 
 struct RootView: View {
-    let container: AppContainer
+    @State private var selectedTab: AppTab = .today
+    @State private var todayViewModel: TodayViewModel
+
+    init(container: AppContainer) {
+        _todayViewModel = State(initialValue: container.makeTodayViewModel())
+    }
 
     var body: some View {
-        ContentUnavailableView("UseBy", systemImage: "leaf", description: Text("Track what's in your fridge before it expires."))
+        TabView(selection: $selectedTab) {
+            Tab("Today", systemImage: "list.bullet.clipboard", value: AppTab.today) {
+                TodayView(viewModel: todayViewModel)
+            }
+        }
+        .onOpenURL { url in
+            if let tab = DeepLink.tab(for: url) {
+                selectedTab = tab
+            }
+        }
     }
 }

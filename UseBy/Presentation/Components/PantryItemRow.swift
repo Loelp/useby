@@ -32,6 +32,7 @@ struct PantryItemRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             FreshnessBadge(daysRemaining: daysRemaining)
+                .layoutPriority(1)
         }
         .padding(.vertical, 4)
         .frame(minHeight: 44)
