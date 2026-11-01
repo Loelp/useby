@@ -90,3 +90,25 @@ Format: **Problem → Cause → Fix → Files changed.**
 - **Cause:** `dateComponents([.day], from:to:)` on raw dates truncates partial days.
 - **Fix:** `PantryItem.daysRemaining(from:calendar:)` compares `startOfDay` on both sides. Tests use a fixed date and a fixed Gregorian calendar in `Australia/Sydney`, so they don't depend on the machine's time zone, and they include a dedicated 1 am boundary test.
 - **Files changed:** `Shared/Domain/Models/PantryItem.swift`, `UseByTests/Fixtures.swift`, `UseByTests/OverviewAndSummaryTests.swift`.
+
+---
+
+## Phase 8: Final verification
+
+### 13. Reminder banner broke apart at the largest Dynamic Type size
+- **Problem:** At AX5 (`accessibility-extra-extra-extra-large`) the Today reminder banner split words mid-word ("Re-min-ders") and squashed the Turn On button into a circle.
+- **Cause:** `ViewThatFits(in: .horizontal)` accepted the `HStack` because wrapping text always reports that it "fits" horizontally. It just gets taller and narrower.
+- **Fix:** Replaced `ViewThatFits` with an explicit `AnyLayout` switch on `dynamicTypeSize.isAccessibilitySize`, the same approach as `PantryItemRow`. At accessibility sizes the icon, text and a full-width button stack vertically. Cook's item chips use rounded rectangles instead of capsules, so wrapped names don't turn into blobs.
+- **Files changed:** `UseBy/Presentation/Components/ReminderBanner.swift`, `UseBy/Presentation/Components/MealCard.swift`.
+
+### 14. Permission and offline paths the simulator can't reproduce
+- **Problem:** The brief asks for manual checks with camera and notifications denied and airplane mode on.
+- **Cause:** `xcrun simctl privacy revoke notifications` fails ("Simulator device failed to complete the requested operation"). The simulator has no airplane mode. `DataScannerViewController.isSupported` is `false` on the simulator, so the camera-denied screen can't be reached there.
+- **Fix:** Revoked camera access with `simctl privacy` and confirmed the app launches without crashing; the scanner shows the "Scanning Isn't Available" state. The offline mapping (`URLError.notConnectedToInternet` / `.timedOut` → `ProductLookupError.offline`) is covered by unit tests. The denied-notification and denied-camera screens still need checking by hand on a physical iPhone.
+- **Files changed:** none.
+
+### 15. Privacy manifest: no required-reason APIs
+- **Problem:** The manifest has to declare every required-reason API that's actually used.
+- **Cause:** n/a. This was a check.
+- **Fix:** Grepped app, widget and shared code for `UserDefaults`, `@AppStorage`, file timestamps, system boot time, disk space and active keyboards. None are used: the notification explainer is triggered by `ReminderAuthorization.notDetermined` rather than a stored flag. `NSPrivacyAccessedAPITypes` is therefore an empty array.
+- **Files changed:** `UseBy/Resources/PrivacyInfo.xcprivacy` (unchanged since scaffold).
