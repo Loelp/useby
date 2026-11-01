@@ -1,10 +1,27 @@
+import OSLog
 import SwiftUI
 
 @main
 struct UseByApp: App {
+    private let container: AppContainer?
+
+    init() {
+        do {
+            container = try AppContainer.make()
+        } catch {
+            Logger(subsystem: "com.usebyapp.UseBy", category: "Launch")
+                .fault("Failed to build app container: \(error.localizedDescription, privacy: .public)")
+            container = nil
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
-            ContentUnavailableView("UseBy", systemImage: "leaf", description: Text("Track what's in your fridge before it expires."))
+            if let container {
+                RootView(container: container)
+            } else {
+                StartupErrorView()
+            }
         }
     }
 }
