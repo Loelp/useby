@@ -10,6 +10,7 @@ final class AppContainer {
     let reminderScheduler: any ReminderScheduling
     let productLookup: any ProductLookupRepository
     let cameraAccess: any CameraAccessProviding
+    let mealSuggestions: any MealSuggestionService
     let calendar: Calendar = .autoupdatingCurrent
     /// Tab shown at launch. DEBUG builds accept `-initialTab today|insights|cook` for screenshots.
     private(set) var initialTab: AppTab = .today
@@ -22,6 +23,7 @@ final class AppContainer {
         reminderScheduler = LocalReminderScheduler(calendar: calendar)
         productLookup = OpenFoodFactsProductLookupRepository()
         cameraAccess = SystemCameraAccessService()
+        mealSuggestions = FoundationModelMealSuggestionService()
     }
 
     // MARK: - ViewModel factories
@@ -50,6 +52,10 @@ final class AppContainer {
 
     func makeInsightsViewModel() -> InsightsViewModel {
         InsightsViewModel(calculateSummary: CalculateWasteSummaryUseCase(pantry: pantryRepository, calendar: calendar))
+    }
+
+    func makeCookViewModel() -> CookViewModel {
+        CookViewModel(suggestMeal: SuggestMealUseCase(pantry: pantryRepository, mealService: mealSuggestions, calendar: calendar))
     }
 
     func makeBarcodeScannerViewModel() -> BarcodeScannerViewModel {
