@@ -8,6 +8,8 @@ final class AppContainer {
     let pantryRepository: any PantryRepository
     let catalogRepository: any CatalogRepository
     let reminderScheduler: any ReminderScheduling
+    let productLookup: any ProductLookupRepository
+    let cameraAccess: any CameraAccessProviding
 
     init(modelContainer: ModelContainer) {
         self.modelContainer = modelContainer
@@ -15,6 +17,8 @@ final class AppContainer {
         pantryRepository = SwiftDataPantryRepository(context: context)
         catalogRepository = SwiftDataCatalogRepository(context: context)
         reminderScheduler = LocalReminderScheduler()
+        productLookup = OpenFoodFactsProductLookupRepository()
+        cameraAccess = SystemCameraAccessService()
     }
 
     static func make(arguments: [String] = ProcessInfo.processInfo.arguments) throws -> AppContainer {
