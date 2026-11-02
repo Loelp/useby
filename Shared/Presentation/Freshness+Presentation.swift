@@ -19,7 +19,6 @@ extension Freshness {
         }
     }
 
-    /// Short badge text, e.g. "Today", "2 days", "Expired 1 day ago".
     static func badgeText(daysRemaining days: Int) -> String {
         switch days {
         case ..<0: "Expired \(dayCount(-days)) ago"
@@ -28,7 +27,6 @@ extension Freshness {
         }
     }
 
-    /// Phrase for VoiceOver, e.g. "use today", "use within 2 days", "expired 1 day ago".
     static func spokenText(daysRemaining days: Int) -> String {
         switch days {
         case ..<0: "expired \(dayCount(-days)) ago"

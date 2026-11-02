@@ -1,6 +1,5 @@
 import Foundation
 
-/// Wire format for `GET /api/v2/product/{barcode}.json?fields=product_name,brands`.
 struct OpenFoodFactsProductResponse: Codable, Sendable {
     struct Product: Codable, Sendable {
         let productName: String?
@@ -12,7 +11,7 @@ struct OpenFoodFactsProductResponse: Codable, Sendable {
         }
     }
 
-    /// 1 when found, 0 when the barcode is unknown.
+    // 0 for an unknown barcode (still HTTP 200)
     let status: Int?
     let product: Product?
 }

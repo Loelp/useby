@@ -1,7 +1,6 @@
 import Foundation
 import Observation
 
-/// One bar in the eaten-vs-binned chart.
 struct CategoryOutcomeBar: Identifiable, Hashable {
     let categoryName: String
     let outcome: ConsumptionOutcome

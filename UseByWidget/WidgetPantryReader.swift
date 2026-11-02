@@ -2,11 +2,9 @@ import Foundation
 import OSLog
 import SwiftData
 
-/// Reads the shared store with its own `ModelContext`, independent of the app process.
 struct WidgetPantryReader {
     private let logger = Logger(subsystem: "com.usebyapp.UseBy.Widget", category: "PantryReader")
 
-    /// Active items that aren't fresh (expired, today or soon), most urgent first.
     func urgentItems(now: Date, calendar: Calendar) -> [PantryItem] {
         do {
             let context = ModelContext(try PersistenceController.makeContainer())

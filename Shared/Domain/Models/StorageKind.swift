@@ -1,6 +1,5 @@
 import Foundation
 
-/// Where an item physically lives. Drives the default icon for a storage location.
 enum StorageKind: String, Sendable, Hashable, CaseIterable, Codable {
     case fridge
     case freezer

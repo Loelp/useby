@@ -6,7 +6,6 @@ import Synchronization
 final class MockPantryRepository: PantryRepository {
     var items: [UUID: PantryItem] = [:]
     var storedEvents: [ConsumptionEvent] = []
-    /// When set, every call throws this error.
     var errorToThrow: Error?
     private(set) var insertedItems: [PantryItem] = []
     private(set) var deletedIDs: [UUID] = []
@@ -98,7 +97,6 @@ final class StubMealService: MealSuggestionService {
         self.result = result
     }
 
-    /// Ingredients passed to the last `suggestMeal(using:)` call.
     var receivedIngredients: [String]? { received.withLock { $0 } }
 
     func suggestMeal(using ingredients: [String]) async throws -> MealIdea {

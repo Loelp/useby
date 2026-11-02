@@ -9,7 +9,6 @@ final class ConsumptionEventEntity {
     var date: Date
     var itemName: String
     var categoryName: String
-    /// Optional so the event outlives a deleted item.
     @Relationship(deleteRule: .nullify)
     var item: PantryItemEntity?
 

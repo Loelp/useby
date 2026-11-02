@@ -21,7 +21,6 @@ struct WasteSummary: Sendable, Hashable {
 
     var hasHistory: Bool { eatenCount + binnedCount > 0 }
 
-    /// Share of food value that was binned, from 0 to 1. Zero when nothing has been resolved.
     var wasteRate: Double {
         let total = savedCents + wastedCents
         guard total > 0 else { return 0 }

@@ -24,7 +24,6 @@ struct SuggestMealUseCase {
 
     var availability: MealSuggestionAvailability { mealService.availability }
 
-    /// Items worth cooking around: not yet expired, due within the horizon, soonest first.
     func expiringItems() throws -> [PantryItem] {
         let today = now()
         let due = try pantry.activeItems().filter { item in

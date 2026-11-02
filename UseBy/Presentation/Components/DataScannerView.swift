@@ -2,8 +2,7 @@ import SwiftUI
 import Vision
 import VisionKit
 
-/// Wraps `DataScannerViewController`. Results are read from the `recognizedItems` async stream
-/// instead of a delegate, which keeps everything on the main actor under Swift 6.
+// Reads recognizedItems instead of a delegate so everything stays on the main actor.
 struct DataScannerView: UIViewControllerRepresentable {
     let onBarcode: (String) -> Void
 

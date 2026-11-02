@@ -1,6 +1,5 @@
 import Foundation
 
-/// Locations and categories inserted on first launch.
 enum DefaultCatalog {
     static let locations: [(name: String, kind: StorageKind)] = [
         ("Fridge", .fridge),

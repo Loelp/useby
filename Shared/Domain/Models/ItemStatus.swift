@@ -6,7 +6,6 @@ enum ItemStatus: String, Sendable, Hashable, CaseIterable, Codable {
     case binned
 }
 
-/// How an active item left the pantry.
 enum ConsumptionOutcome: String, Sendable, Hashable, CaseIterable, Codable {
     case eaten
     case binned

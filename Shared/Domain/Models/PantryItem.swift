@@ -4,7 +4,7 @@ struct PantryItem: Identifiable, Sendable, Hashable {
     let id: UUID
     var name: String
     var quantity: Int
-    /// Total amount paid for this item, in cents. Used as its value when eaten or binned.
+    // Total paid, in cents.
     var priceCents: Int
     var addedOn: Date
     var useBy: Date
@@ -13,7 +13,6 @@ struct PantryItem: Identifiable, Sendable, Hashable {
     var location: StorageLocation
     var category: FoodCategory
 
-    /// Whole calendar days from `date` until the use-by date. Negative once expired.
     func daysRemaining(from date: Date, calendar: Calendar) -> Int {
         let start = calendar.startOfDay(for: date)
         let end = calendar.startOfDay(for: useBy)
@@ -26,7 +25,6 @@ struct PantryItem: Identifiable, Sendable, Hashable {
 }
 
 extension Sequence where Element == PantryItem {
-    /// Soonest use-by first, then alphabetical so ties are stable.
     func sortedByUrgency() -> [PantryItem] {
         sorted { lhs, rhs in
             if lhs.useBy != rhs.useBy { return lhs.useBy < rhs.useBy }

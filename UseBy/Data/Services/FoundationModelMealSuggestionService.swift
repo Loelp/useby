@@ -1,7 +1,6 @@
 import Foundation
 import FoundationModels
 
-/// On-device meal ideas from Apple Intelligence. Nothing leaves the iPhone.
 struct FoundationModelMealSuggestionService: MealSuggestionService {
     static let instructions = """
         You are a practical home cook helping someone use up food before it expires. \

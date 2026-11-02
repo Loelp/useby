@@ -23,7 +23,6 @@ enum SummaryPeriod: String, Sendable, Hashable, CaseIterable, Identifiable {
         }
     }
 
-    /// Earliest event date included in this period, or `nil` for all time.
     func startDate(endingAt now: Date, calendar: Calendar) -> Date? {
         guard let dayCount else { return nil }
         return calendar.date(byAdding: .day, value: -dayCount, to: now)

@@ -1,7 +1,6 @@
 import Foundation
 
-/// Looks up product names from the Open Food Facts public database (Open Database Licence).
-/// This is the app's only network call.
+// The app's only network call.
 struct OpenFoodFactsProductLookupRepository: ProductLookupRepository {
     static let userAgent = "UseBy/1.0 (support@usebyapp.com)"
     static let timeout: TimeInterval = 8

@@ -12,7 +12,6 @@ struct FetchPantryOverviewUseCase {
         self.calendar = calendar
     }
 
-    /// Active items grouped by freshness, most urgent section first. Empty sections are omitted.
     func execute() throws -> [FreshnessSection] {
         let today = now()
         let grouped = Dictionary(grouping: try pantry.activeItems()) { item in

@@ -13,7 +13,6 @@ extension CategoryEntity {
 }
 
 extension PantryItemEntity {
-    /// `nil` only if the item's location or category has been removed from the store.
     func toDomain() -> PantryItem? {
         guard let location, let category else { return nil }
         return PantryItem(

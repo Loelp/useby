@@ -43,7 +43,6 @@ final class AddItemViewModel: Identifiable {
     private(set) var isSaving = false
     var showsReminderExplainer = false
     var scannerViewModel: BarcodeScannerViewModel?
-    /// Set once the item is saved and any reminder prompt is handled; the view dismisses.
     private(set) var isFinished = false
 
     private let addItem: AddPantryItemUseCase
@@ -152,7 +151,7 @@ final class AddItemViewModel: Identifiable {
 
     func allowReminders() async {
         if await reminders.requestAuthorization() == .authorized, let savedItem {
-            // The first reminder was queued before permission existed; schedule it again now it can fire.
+            // Queued before permission was granted, so schedule it again.
             reminders.scheduleReminder(for: savedItem)
         }
         isFinished = true
