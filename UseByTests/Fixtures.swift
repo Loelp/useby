@@ -9,7 +9,7 @@ enum Fixtures {
         return calendar
     }()
 
-    /// Tuesday 10 March 2026, 10:00 am in Sydney.
+    // Tue 10 Mar 2026, 10am Sydney
     static let now: Date = calendar.date(from: DateComponents(year: 2026, month: 3, day: 10, hour: 10))!
 
     static let fridge = StorageLocation(id: UUID(), name: "Fridge", kind: .fridge)

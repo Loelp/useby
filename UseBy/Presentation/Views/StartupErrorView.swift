@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// Shown instead of crashing when the data store can't be opened.
 struct StartupErrorView: View {
     var body: some View {
         ContentUnavailableView {

@@ -1,7 +1,6 @@
 import Foundation
 import SwiftData
 
-/// Composition root: builds every dependency once and hands out ViewModels.
 @MainActor
 final class AppContainer {
     let modelContainer: ModelContainer
@@ -12,7 +11,6 @@ final class AppContainer {
     let cameraAccess: any CameraAccessProviding
     let mealSuggestions: any MealSuggestionService
     let calendar: Calendar = .autoupdatingCurrent
-    /// Tab shown at launch. DEBUG builds accept `-initialTab today|insights|cook` for screenshots.
     private(set) var initialTab: AppTab = .today
 
     init(modelContainer: ModelContainer) {
@@ -25,8 +23,6 @@ final class AppContainer {
         cameraAccess = SystemCameraAccessService()
         mealSuggestions = FoundationModelMealSuggestionService()
     }
-
-    // MARK: - ViewModel factories
 
     func makeTodayViewModel() -> TodayViewModel {
         TodayViewModel(
@@ -61,8 +57,6 @@ final class AppContainer {
     func makeBarcodeScannerViewModel() -> BarcodeScannerViewModel {
         BarcodeScannerViewModel(cameraAccess: cameraAccess)
     }
-
-    // MARK: - Launch
 
     static func make(arguments: [String] = ProcessInfo.processInfo.arguments) throws -> AppContainer {
         let container = AppContainer(modelContainer: try PersistenceController.makeContainer())

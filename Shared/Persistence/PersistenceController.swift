@@ -13,8 +13,7 @@ enum PersistenceController {
     private static let storeFileName = "UseBy.store"
     private static let logger = Logger(subsystem: "com.usebyapp.UseBy", category: "Persistence")
 
-    /// Store location shared by the app and widget, or `nil` when the App Group isn't provisioned
-    /// (for example, a free personal signing team).
+    // nil when the App Group isn't provisioned, e.g. on a free signing team.
     static var sharedStoreURL: URL? {
         FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: AppGroup.identifier)?

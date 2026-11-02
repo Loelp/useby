@@ -1,9 +1,7 @@
 import Foundation
 import UserNotifications
 
-/// Schedules a local notification at 9:00 am the day before an item's use-by date.
-/// Uses completion-handler APIs: the async variants trip Swift 6 sendability checks
-/// on `UNNotificationSettings`.
+// Completion handlers: the async APIs trip Swift 6 sendability checks on UNNotificationSettings.
 @MainActor
 final class LocalReminderScheduler: ReminderScheduling {
     static let reminderHour = 9

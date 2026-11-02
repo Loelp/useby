@@ -92,8 +92,6 @@ final class SwiftDataPantryRepository: PantryRepository {
         }
     }
 
-    // MARK: - Helpers
-
     private func entity(id: UUID) throws -> PantryItemEntity? {
         var descriptor = FetchDescriptor<PantryItemEntity>(predicate: #Predicate { $0.id == id })
         descriptor.fetchLimit = 1
@@ -105,7 +103,6 @@ final class SwiftDataPantryRepository: PantryRepository {
         WidgetCenter.shared.reloadTimelines(ofKind: WidgetKind.expiringItems)
     }
 
-    /// Rethrows domain errors unchanged; maps any storage error to `PantryError.persistenceFailed`.
     private func perform<T>(_ work: () throws -> T) throws -> T {
         do {
             return try work()

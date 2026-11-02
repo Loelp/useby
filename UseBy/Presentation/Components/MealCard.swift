@@ -60,7 +60,6 @@ struct MealCard: View {
     }
 }
 
-/// Wrapping row of item name capsules.
 struct ItemChips: View {
     let names: [String]
 
@@ -78,7 +77,6 @@ struct ItemChips: View {
     }
 }
 
-/// Minimal left-to-right wrapping layout.
 struct FlowLayout: Layout {
     var spacing: CGFloat = 8
 

@@ -5,7 +5,6 @@ struct MealIdea: Sendable, Hashable {
     let minutes: Int
     let ingredients: [String]
     let steps: [String]
-    /// Names of the pantry items this meal is meant to use up.
     var usesItems: [String]
 }
 

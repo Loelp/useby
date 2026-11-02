@@ -7,7 +7,6 @@ final class TodayViewModel {
     private(set) var sections: [FreshnessSection] = []
     private(set) var hasLoaded = false
     private(set) var reminderAuthorization: ReminderAuthorization?
-    /// Bumped on each resolve so the view can play matching haptics.
     private(set) var eatenCount = 0
     private(set) var binnedCount = 0
     var errorMessage: String?
@@ -52,7 +51,6 @@ final class TodayViewModel {
         set { if !newValue { itemPendingDeletion = nil } }
     }
 
-    /// Banner state: `nil` hides the banner.
     var reminderBanner: ReminderAuthorization? {
         switch reminderAuthorization {
         case .notDetermined, .denied: reminderAuthorization
