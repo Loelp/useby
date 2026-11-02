@@ -23,7 +23,6 @@ final class BarcodeScannerViewModel: Identifiable {
         access = await cameraAccess.requestAccess()
     }
 
-    /// Returns `true` only for the first code, so one scan fills the form once.
     func accept(_ code: String) -> Bool {
         guard !hasDeliveredCode, !code.isEmpty else { return false }
         hasDeliveredCode = true

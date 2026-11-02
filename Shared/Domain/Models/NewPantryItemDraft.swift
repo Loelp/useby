@@ -1,6 +1,5 @@
 import Foundation
 
-/// Unvalidated input for a new pantry item, as typed or scanned by the user.
 struct NewPantryItemDraft: Sendable, Hashable {
     var name: String
     var quantity: Int

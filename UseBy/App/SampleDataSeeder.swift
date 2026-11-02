@@ -2,8 +2,6 @@
 import Foundation
 import SwiftData
 
-/// Demo data for App Store screenshots and the demo video.
-/// `-seedSampleData` replaces the store with realistic Australian groceries; `-resetData` wipes it.
 @MainActor
 struct SampleDataSeeder {
     static let seedArgument = "-seedSampleData"
@@ -45,15 +43,13 @@ struct SampleDataSeeder {
         try context.save()
     }
 
-    /// Deletes object by object. `ModelContext.delete(model:)` is a batch delete, which
-    /// Core Data rejects when a relationship has a nullify inverse.
+    // delete(model:) is a batch delete, which Core Data rejects for a nullify inverse.
     private func deleteAll<T: PersistentModel>(_ type: T.Type) throws {
         for object in try context.fetch(FetchDescriptor<T>()) {
             context.delete(object)
         }
     }
 
-    /// Replaces items and history with sample data. Expects the default catalog to exist.
     func seedSampleData() throws {
         try deleteAll(ConsumptionEventEntity.self)
         try deleteAll(PantryItemEntity.self)

@@ -1,6 +1,5 @@
 import SwiftUI
 
-/// Coloured dot plus primary-coloured text, so colour is never the only signal.
 struct FreshnessBadge: View {
     let daysRemaining: Int
 

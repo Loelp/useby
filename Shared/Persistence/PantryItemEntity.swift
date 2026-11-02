@@ -15,7 +15,7 @@ final class PantryItemEntity {
     var location: StorageLocationEntity?
     var category: CategoryEntity?
 
-    /// Deleting an item nullifies `event.item` so consumption history is kept.
+    // Nullify so consumption history outlives the item.
     @Relationship(deleteRule: .nullify, inverse: \ConsumptionEventEntity.item)
     var events: [ConsumptionEventEntity] = []
 
