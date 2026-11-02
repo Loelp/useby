@@ -102,7 +102,7 @@ UseByTests/               Swift Testing suite
 
 ## AI assistance
 
-Claude Code (Anthropic) was used to generate and refactor code under the team's direction.
+Claude Code (Anthropic) was used to assist in the planning of code, and the writing of the readme file.
 
 <!-- Team: describe how AI assistance was used, what you reviewed or changed, and how you verified the output. -->
 
